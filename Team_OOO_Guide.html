@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Team Status & Out of Office Guide — Cactus Home Offer</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f6f9; color: #222; line-height: 1.6; }
+
+  .header { background: #1a6b3c; color: white; padding: 36px 48px 28px; display: flex; align-items: center; gap: 16px; }
+  .header h1 { font-size: 26px; font-weight: 700; }
+  .header p  { font-size: 14px; opacity: 0.85; margin-top: 3px; }
+
+  /* LAW BANNER */
+  .law-banner { background: #1a1a2e; color: white; padding: 20px 32px; display: flex; align-items: flex-start; gap: 16px; }
+  .law-banner .law-icon { font-size: 32px; flex-shrink: 0; }
+  .law-banner h2 { font-size: 16px; font-weight: 700; color: #f0a500; margin-bottom: 6px; letter-spacing: 0.5px; }
+  .law-banner p  { font-size: 13px; color: #ccc; line-height: 1.6; }
+  .law-banner strong { color: white; }
+
+  .alert { background: #fff8e1; border-left: 5px solid #f0a500; padding: 12px 28px; font-size: 13.5px; color: #5c3a00; }
+
+  .container { max-width: 900px; margin: 0 auto; padding: 32px 20px 60px; }
+
+  .section { background: white; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 28px; overflow: hidden; }
+  .sec-head { background: #1a6b3c; color: white; padding: 14px 22px; font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+  .sec-head.red    { background: #b71c1c; }
+  .sec-head.blue   { background: #1565c0; }
+  .sec-head.dark   { background: #1a1a2e; }
+  .sec-body { padding: 26px; }
+
+  .step { display: flex; gap: 16px; margin-bottom: 24px; }
+  .step:last-child { margin-bottom: 0; }
+  .step-num { width: 28px; height: 28px; border-radius: 50%; background: #e8f5ee; color: #1a6b3c; font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+  .step-num.blue { background: #e3f2fd; color: #1565c0; }
+  .step-body h3 { font-size: 14px; font-weight: 700; color: #1a3d2a; margin-bottom: 5px; }
+  .step-body h3.blue { color: #0d3b6e; }
+  .step-body p  { font-size: 13px; color: #444; margin-bottom: 10px; }
+
+  /* MOCK UI */
+  .mock { border: 1.5px solid #d8dce0; border-radius: 10px; overflow: hidden; max-width: 520px; margin-top: 10px; box-shadow: 0 3px 12px rgba(0,0,0,0.09); }
+  .mock-bar { background: #f1f3f4; padding: 7px 12px; font-size: 11px; color: #777; border-bottom: 1px solid #ddd; display: flex; align-items: center; gap: 8px; }
+  .dots { display: flex; gap: 5px; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot.r { background: #ff6159; } .dot.y { background: #ffbd2e; } .dot.g { background: #28c840; }
+  .url { flex: 1; background: white; border-radius: 4px; padding: 2px 8px; font-size: 11px; color: #555; }
+  .mock-body { background: white; padding: 16px 18px; }
+
+  /* GOOGLE CHAT AVATAR */
+  .topbar { display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; border-bottom: 1px solid #f0f0f0; margin-bottom: 14px; }
+  .gchat-label { font-size: 13px; font-weight: 600; color: #444; display: flex; align-items: center; gap: 6px; }
+  .avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #1a6b3c, #2d9e5f); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 16px; position: relative; flex-shrink: 0; }
+  .sdot { width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; position: absolute; bottom: 0; right: 0; }
+  .sdot.green  { background: #34a853; }
+  .sdot.yellow { background: #fbbc04; }
+  .sdot.grey   { background: #9e9e9e; }
+  .sdot.blue   { background: #1a73e8; }
+  .avatar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .av-name { font-size: 13px; font-weight: 600; color: #202124; }
+  .av-sub  { font-size: 11px; color: #5f6368; }
+
+  .tag { display: inline-flex; align-items: center; gap: 3px; background: #ea4335; color: white; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px; margin-left: 6px; vertical-align: middle; }
+  .tag.blue { background: #1565c0; }
+
+  /* STATUS DROPDOWN */
+  .dropdown { border: 1px solid #dadce0; border-radius: 8px; padding: 6px 0; max-width: 210px; box-shadow: 0 4px 12px rgba(0,0,0,0.13); margin: 0 0 0 52px; }
+  .d-opt { padding: 8px 14px; font-size: 12px; display: flex; align-items: center; gap: 9px; color: #202124; }
+  .d-opt.sel { background: #e8f0fe; color: #1967d2; font-weight: 600; }
+  .d-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+
+  /* GMAIL MOCK */
+  .gmail-nav { background: #f1f3f4; padding: 8px 16px; border-bottom: 1px solid #e0e0e0; display: flex; gap: 18px; font-size: 12px; color: #5f6368; }
+  .gmail-nav .active { color: #1a73e8; font-weight: 600; border-bottom: 2px solid #1a73e8; padding-bottom: 2px; }
+  .gform { padding: 16px 18px; }
+  .gform h4 { font-size: 13px; font-weight: 600; color: #202124; margin-bottom: 12px; }
+  .grow { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .grow label { font-size: 12px; color: #5f6368; width: 80px; flex-shrink: 0; }
+  .ginput { border: 1px solid #dadce0; border-radius: 4px; padding: 5px 9px; font-size: 12px; color: #202124; flex: 1; max-width: 260px; }
+  .ginput.on { border-color: #34a853; }
+  .toggle-row { display: flex; align-items: center; gap: 9px; margin-bottom: 12px; }
+  .tog { width: 34px; height: 18px; border-radius: 9px; position: relative; flex-shrink: 0; }
+  .tog.on  { background: #34a853; }
+  .tog.off { background: #bdbdbd; }
+  .tog::after { content:''; position:absolute; width:14px; height:14px; background:white; border-radius:50%; top:2px; transition:.2s; }
+  .tog.on::after  { right: 2px; }
+  .tog.off::after { left: 2px; }
+  .tog-lbl { font-size: 12px; color: #202124; }
+  .tog-lbl.on { color: #1a6b3c; font-weight: 600; }
+  .gtextarea { border: 1px solid #34a853; border-radius: 4px; width: 100%; min-height: 56px; padding: 7px 9px; font-size: 12px; color: #202124; resize: none; font-family: 'Segoe UI', Arial, sans-serif; }
+  .gbtn { border: none; border-radius: 4px; padding: 7px 18px; font-size: 12px; font-weight: 600; cursor: pointer; margin-top: 10px; }
+  .gbtn.green { background: #1a73e8; color: white; }
+  .gbtn.blue  { background: #1565c0; color: white; }
+
+  /* GOOGLE CALENDAR MOCK */
+  .cal-header { background: white; padding: 10px 16px; border-bottom: 1px solid #e0e0e0; display: flex; align-items: center; gap: 10px; }
+  .cal-header .cal-logo { font-size: 20px; }
+  .cal-header span { font-size: 14px; font-weight: 600; color: #444; }
+  .cal-body { padding: 14px 18px; }
+  .cal-event-form { background: white; border: 1px solid #dadce0; border-radius: 8px; padding: 14px 16px; max-width: 360px; box-shadow: 0 2px 10px rgba(0,0,0,0.12); }
+  .cal-event-form h4 { font-size: 13px; font-weight: 600; color: #202124; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+  .cal-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .cal-row label { font-size: 11px; color: #5f6368; width: 70px; flex-shrink: 0; }
+  .cal-input { border: 1px solid #dadce0; border-radius: 4px; padding: 5px 9px; font-size: 11px; color: #202124; flex: 1; }
+  .cal-input.highlight { border-color: #1565c0; background: #e8f0fe; font-weight: 600; color: #1565c0; }
+  .cal-status-pill { display: inline-flex; align-items: center; gap: 6px; background: #e8f0fe; border: 1px solid #1565c0; border-radius: 20px; padding: 4px 12px; font-size: 11px; font-weight: 700; color: #1565c0; margin: 6px 0 10px; }
+  .cal-status-pill .dot-ooo { width: 8px; height: 8px; border-radius: 50%; background: #1a73e8; }
+  .auto-sync-box { background: #e8f5ee; border: 1px solid #34a853; border-radius: 6px; padding: 8px 12px; font-size: 11px; color: #1a3d2a; margin-top: 8px; display: flex; align-items: center; gap: 8px; }
+  .auto-sync-box .sync-icon { font-size: 16px; flex-shrink: 0; }
+
+  /* HINT BOXES */
+  .hb { border-radius: 6px; padding: 10px 14px; font-size: 13px; margin-top: 10px; }
+  .hb-blue  { background: #e3f2fd; border-left: 4px solid #0d47a1; color: #0d47a1; }
+  .hb-green { background: #e8f5ee; border-left: 4px solid #1a6b3c; color: #1a3d2a; }
+  .hb-gold  { background: #fff8e1; border-left: 4px solid #f0a500; color: #5c3a00; }
+
+  /* RULES */
+  .rule { display: flex; gap: 12px; margin-bottom: 14px; font-size: 13px; color: #333; align-items: flex-start; }
+  .rule:last-child { margin-bottom: 0; }
+  .rule-icon { font-size: 19px; flex-shrink: 0; }
+
+  /* STATUS TABLE */
+  .status-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 4px; }
+  .status-table th { background: #1a1a2e; color: #f0a500; padding: 9px 14px; text-align: left; font-size: 12px; font-weight: 700; letter-spacing: 0.4px; }
+  .status-table td { padding: 9px 14px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; }
+  .status-table tr:last-child td { border-bottom: none; }
+  .status-table tr:nth-child(even) td { background: #fafafa; }
+  .pill { display: inline-flex; align-items: center; gap: 5px; border-radius: 12px; padding: 3px 10px; font-size: 11px; font-weight: 600; }
+  .pill.yellow { background: #fff8e1; color: #b45309; border: 1px solid #f0a500; }
+  .pill.grey   { background: #f0f0f0; color: #555; border: 1px solid #bbb; }
+  .pill.blue   { background: #e3f2fd; color: #1565c0; border: 1px solid #1565c0; }
+  .pill.red    { background: #fce8e6; color: #b71c1c; border: 1px solid #b71c1c; }
+  .pill.green  { background: #e8f5ee; color: #1a6b3c; border: 1px solid #34a853; }
+  .skip-badge { display: inline-block; background: #b71c1c; color: white; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; }
+  .ok-badge   { display: inline-block; background: #1a6b3c; color: white; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; }
+
+  /* FORM BOX */
+  .form-box { background: #1a6b3c; border-radius: 10px; padding: 22px 26px; margin-bottom: 28px; display: flex; align-items: flex-start; gap: 18px; }
+  .form-box .ficon { font-size: 38px; flex-shrink: 0; }
+  .form-box h3 { font-size: 16px; font-weight: 700; color: white; margin-bottom: 6px; }
+  .form-box p  { font-size: 13px; color: rgba(255,255,255,0.88); margin-bottom: 12px; }
+  .form-box a  { display: inline-block; background: white; color: #1a6b3c; font-weight: 700; font-size: 13px; padding: 9px 18px; border-radius: 6px; text-decoration: none; }
+  .form-box a:hover { background: #e8f5ee; }
+
+  .chk-item { display: flex; gap: 10px; font-size: 13px; color: #333; margin-bottom: 10px; align-items: flex-start; }
+  .chk-item:last-child { margin-bottom: 0; }
+
+  .footer { text-align: center; color: #888; font-size: 12px; margin-top: 16px; }
+  .footer strong { color: #1a6b3c; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div style="font-size:46px;">🌵</div>
+  <div>
+    <h1>Team Status &amp; Out of Office Guide</h1>
+    <p>Cactus Home Offer — Required procedures for all team members</p>
+  </div>
+</div>
+
+<!-- LAW BANNER -->
+<div class="law-banner">
+  <div class="law-icon">⚖️</div>
+  <div>
+    <h2>GOOGLE CHAT STATUS IS LAW</h2>
+    <p>Everyone must use their Google Chat status actively to ensure <strong>absolute visibility</strong>. If your icon is gray, says lunch, or shows OOO — <strong>you get skipped for leads and tasks. No exceptions.</strong></p>
+  </div>
+</div>
+
+<!-- ALERT -->
+<div class="alert">
+  ⚠️ &nbsp;All team members must follow these steps when going to lunch, on errands, taking a day off, or on vacation. Google Calendar OOO events <strong>automatically sync</strong> to your Google Chat status.
+</div>
+
+<div class="container">
+
+  <!-- ========== STATUS REFERENCE TABLE ========== -->
+  <div class="section">
+    <div class="sec-head dark">📊 &nbsp;Status Reference — What Each Status Means for Leads &amp; Tasks</div>
+    <div class="sec-body" style="padding:0;">
+      <table class="status-table">
+        <tr>
+          <th>Your Status</th>
+          <th>What Teammates See</th>
+          <th>Lead / Task Assignment</th>
+        </tr>
+        <tr>
+          <td>🟢 Active</td>
+          <td><span class="pill green">● Active</span></td>
+          <td><span class="ok-badge">✓ Receives leads</span></td>
+        </tr>
+        <tr>
+          <td>🟡 At Lunch / Away (timed)</td>
+          <td><span class="pill yellow">🍱 At Lunch</span></td>
+          <td><span class="skip-badge">✗ Skipped</span></td>
+        </tr>
+        <tr>
+          <td>⚫ Gray / No status set</td>
+          <td><span class="pill grey">● Inactive</span></td>
+          <td><span class="skip-badge">✗ Skipped</span></td>
+        </tr>
+        <tr>
+          <td>📅 Calendar OOO (PTO, doctor, flight)</td>
+          <td><span class="pill blue">📅 Out of office</span></td>
+          <td><span class="skip-badge">✗ Skipped</span></td>
+        </tr>
+        <tr>
+          <td>🔴 Do Not Disturb</td>
+          <td><span class="pill red">⛔ Do not disturb</span></td>
+          <td><span class="skip-badge">✗ Skipped</span></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ========== SECTION 1: LUNCH STATUS ========== -->
+  <div class="section">
+    <div class="sec-head">🍱 &nbsp;1. How to Set a Timed Lunch / Errand Status in Google Chat</div>
+    <div class="sec-body">
+
+      <div class="hb hb-gold" style="margin-bottom:20px;">⏱️ <strong>Always use a timed status</strong> for short breaks. Set it for 1 hour (lunch) or however long you'll be gone — it clears automatically when you return.</div>
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>Click your profile photo in the top-right corner of Google Chat</h3>
+          <p>Look for your initials or picture. Click it to open your account menu.</p>
+          <div class="mock">
+            <div class="mock-bar">
+              <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
+              <div class="url">chat.google.com</div>
+            </div>
+            <div class="mock-body">
+              <div class="topbar">
+                <div class="gchat-label">💬 Google Chat</div>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <div class="avatar" style="border:3px solid #ea4335;">E<div class="sdot green"></div></div>
+                  <span class="tag">👆 Click here</span>
+                </div>
+              </div>
+              <p style="font-size:11px;color:#888;font-style:italic;">← Your profile picture / initials appear here</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>Click "Add a status" or your current status to set a custom timed one</h3>
+          <p>Select the pencil / "Add a status" option at the bottom of the dropdown.</p>
+          <div class="mock">
+            <div class="mock-bar">
+              <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
+              <div class="url">chat.google.com</div>
+            </div>
+            <div class="mock-body">
+              <div class="avatar-row">
+                <div class="avatar">E<div class="sdot green"></div></div>
+                <div><div class="av-name">Eveling</div><div class="av-sub">eveling@cactushomeoffer.com</div></div>
+              </div>
+              <div class="dropdown">
+                <div class="d-opt"><div class="d-dot" style="background:#34a853;"></div>Active</div>
+                <div class="d-opt"><div class="d-dot" style="background:#fbbc04;"></div>Do not disturb</div>
+                <div class="d-opt"><div class="d-dot" style="background:#9e9e9e;"></div>Away</div>
+                <div style="border-top:1px solid #eee;margin:4px 0;"></div>
+                <div class="d-opt sel" style="font-size:11px;">✏️ Add a status <span class="tag">👆 Click</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h3>Type your status (e.g. "🍱 At Lunch") and set a timer for 45 minutes</h3>
+          <p>Use the duration dropdown to set how long you'll be away — the status clears automatically when the time is up.</p>
+          <div class="mock">
+            <div class="mock-bar">
+              <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
+              <div class="url">chat.google.com</div>
+            </div>
+            <div class="mock-body">
+              <div style="font-size:12px;font-weight:600;color:#202124;margin-bottom:10px;">Set a status</div>
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+                <div style="border:1px solid #dadce0;border-radius:6px;padding:7px 10px;font-size:12px;color:#202124;flex:1;background:#e8f0fe;font-weight:600;">🍱 At Lunch</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+                <span style="font-size:11px;color:#5f6368;white-space:nowrap;">Clear after:</span>
+                <div style="border:1px solid #1565c0;border-radius:6px;padding:5px 10px;font-size:12px;color:#1565c0;font-weight:700;background:#e8f0fe;">1 hour ▾ <span class="tag blue">Set this</span></div>
+              </div>
+              <button class="gbtn green" style="font-size:12px;padding:7px 16px;">Save status</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h3>Your status shows with the timer — auto-clears when time is up ✅</h3>
+          <div class="mock">
+            <div class="mock-bar">
+              <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
+              <div class="url">chat.google.com</div>
+            </div>
+            <div class="mock-body">
+              <div class="avatar-row">
+                <div class="avatar">E<div class="sdot yellow"></div></div>
+                <div><div class="av-name">Eveling</div><div class="av-sub">🍱 At Lunch · 58 min remaining</div></div>
+              </div>
+              <div class="hb hb-green">✅ Status set with timer! Will automatically clear and return to Active.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========== SECTION 2: GOOGLE CALENDAR OOO ========== -->
+  <div class="section">
+    <div class="sec-head blue">📅 &nbsp;2. How to Set Out of Office on Google Calendar (PTO / Doctor / Flight)</div>
+    <div class="sec-body">
+
+      <div class="hb hb-blue" style="margin-bottom:20px;">🔄 <strong>Google Calendar OOO automatically syncs to your Google Chat status.</strong> When someone messages you, Chat will show them you're out of office — no extra steps needed. This is the required method for any full-day absence.</div>
+
+      <div class="step">
+        <div class="step-num blue">1</div>
+        <div class="step-body">
+          <h3 class="blue">Open Google Calendar and click on the day you'll be out</h3>
+          <p>Go to calendar.google.com. Click directly on the date (or drag across multiple days for a range).</p>
+          <div class="mock">
+            <div class="mock-bar">
+              <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
+              <div class="url">calendar.google.com</div>
+            </div>
+            <div class="cal-header">
+              <div class="cal-logo">📅</div>
+              <span style="font-weight:700;"><span style="color:#4285f4">G</span><span style="color:#ea4335">o</span><span style="color:#fbbc04">o</span><span style="color:#4285f4">g</span><span style="color:#34a853">l</span><span style="color:#ea4335">e</span> Calendar</span>
+            </div>
+            <div class="cal-body">
+              <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;max-width:380px;">
+                <div style="text-align:center;font-size:10px;color:#5f6368;padding:4px;">Sun</div>
+                <div style="text-align:center;font-size:10px;color:#5f6368;padding:4px;">Mon</div>
+                <div style="text-align:center;font-size:10px;color:#5f6368;padding:4px;">Tue</div>
+                <div style="text-align:center;font-size:10px;color:#5f6368;padding:4px;">Wed</div>
+                <div style="text-align:center;font-size:10px;color:#5f6368;padding:4px;">Thu</div>
+                <div style="text-align:center;font-size:10px;color:#5f6368;padding:4px;">Fri</div>
+                <div style="text-align:center;font-size:10px;color:#5f6368;padding:4px;">Sat</div>
+                <div style="text-align:center;font-size:11px;padding:6px;color:#444;">8</div>
+                <div style="text-align:center;font-size:11px;padding:6px;background:#e8f0fe;border-radius:4px;color:#1565c0;font-weight:700;cursor:pointer;border:2px solid #1565c0;">9 <span class="tag blue" style="font-size:9px;padding:1px 4px;">click</span></div>
+                <div style="text-align:center;font-size:11px;padding:6px;background:#e8f0fe;border-radius:4px;color:#1565c0;font-weight:700;">10</div>
+                <div style="text-align:center;font-size:11px;padding:6px;background:#e8f0fe;border-radius:4px;color:#1565c0;font-weight:700;">11</div>
+                <div style="text-align:center;font-size:11px;padding:6px;color:#444;">12</div>
+                <div style="text-align:center;font-size:11px;padding:6px;color:#444;">13</div>
+                <div style="text-align:center;font-size:11px;padding:6px;color:#444;">14</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num blue">2</div>
+        <div class="step-body">
+          <h3 class="blue">In the event creation panel — select "Out of office" as the event type</h3>
+          <p>When the quick-create box appears, click <strong>"More options"</strong> or look for the event type selector. Change it from "Event" to <strong>"Out of office."</strong></p>
+          <div class="mock">
+            <div class="mock-bar">
+              <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
+              <div class="url">calendar.google.com</div>
+            </div>
+            <div class="cal-body">
+              <div class="cal-event-form">
+                <h4>📅 New event</h4>
+                <div style="display:flex;gap:6px;margin-bottom:12px;">
+                  <div style="padding:5px 12px;border:1px solid #dadce0;border-radius:20px;font-size:11px;color:#5f6368;cursor:pointer;">Event</div>
+                  <div style="padding:5px 12px;border:2px solid #1565c0;border-radius:20px;font-size:11px;color:#1565c0;font-weight:700;background:#e8f0fe;cursor:pointer;">Out of office <span class="tag blue" style="font-size:9px;padding:1px 5px;">Select this</span></div>
+                  <div style="padding:5px 12px;border:1px solid #dadce0;border-radius:20px;font-size:11px;color:#5f6368;cursor:pointer;">Task</div>
+                </div>
+                <div class="cal-row">
+                  <label>Title</label>
+                  <input class="cal-input" value="PTO – Out of Office" readonly>
+                </div>
+                <div class="cal-row">
+                  <label>Date</label>
+                  <input class="cal-input highlight" value="Jun 9 – Jun 11, 2026" readonly>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num blue">3</div>
+        <div class="step-body">
+          <h3 class="blue">Fill in the title and date range, then save</h3>
+          <p>Give it a clear title (e.g. "PTO", "Doctor Appointment", "Travel Day") and set the correct dates. Click Save.</p>
+          <div class="mock">
+            <div class="mock-bar">
+              <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
+              <div class="url">calendar.google.com</div>
+            </div>
+            <div class="cal-body">
+              <div class="cal-event-form">
+                <h4>📅 Out of office</h4>
+                <div class="cal-row"><label>Title</label><input class="cal-input highlight" value="🌴 PTO – Out of Office" readonly></div>
+                <div class="cal-row"><label>Start</label><input class="cal-input" value="Mon, Jun 9, 2026" readonly></div>
+                <div class="cal-row"><label>End</label><input class="cal-input" value="Wed, Jun 11, 2026" readonly></div>
+                <div class="cal-row"><label>All day</label><input type="checkbox" checked readonly style="width:16px;height:16px;accent-color:#1565c0;"></div>
+                <button class="gbtn blue" style="font-size:12px;padding:7px 16px;">Save</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num blue">4</div>
+        <div class="step-body">
+          <h3 class="blue">Google Chat automatically shows your OOO status 🔄</h3>
+          <p>Once saved, anyone who tries to message you in Google Chat will instantly see you're out of office — no separate Chat status needed.</p>
+          <div class="mock">
+            <div class="mock-bar">
+              <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
+              <div class="url">chat.google.com</div>
+            </div>
+            <div class="mock-body">
+              <div class="avatar-row">
+                <div class="avatar">E<div class="sdot blue"></div></div>
+                <div>
+                  <div class="av-name">Eveling</div>
+                  <div class="av-sub">📅 Out of office · Back Jun 12</div>
+                </div>
+              </div>
+              <div class="auto-sync-box">
+                <span class="sync-icon">🔄</span>
+                <span><strong>Auto-synced from Google Calendar.</strong> No manual Chat status needed — Calendar drives this automatically.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========== SECTION 3: GMAIL OOO ========== -->
+  <div class="section">
+    <div class="sec-head">✉️ &nbsp;3. Also Set Gmail Vacation Responder for Any Day Off</div>
+    <div class="sec-body">
+      <p style="font-size:13px;color:#444;margin-bottom:20px;">The Calendar OOO handles Chat status automatically, but you must also set Gmail's vacation responder so anyone who emails you gets an automatic reply.</p>
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>Open Gmail → click ⚙️ gear icon → "See all settings"</h3>
+          <p>The gear icon is in the top-right of Gmail.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>"General" tab → scroll to "Vacation responder" → toggle ON</h3>
+          <div class="mock">
+            <div class="mock-bar">
+              <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
+              <div class="url">mail.google.com › settings</div>
+            </div>
+            <div class="gmail-nav">
+              <span class="active">General</span><span>Labels</span><span>Inbox</span><span>Filters</span>
+            </div>
+            <div class="gform">
+              <h4>Vacation responder</h4>
+              <div class="toggle-row" style="margin-top:10px;">
+                <div class="tog on"></div><span class="tog-lbl on">✅ Vacation responder ON</span>
+              </div>
+              <div class="grow"><label>First day</label><input class="ginput on" value="06/09/2026" readonly></div>
+              <div class="grow"><label>Last day</label><input class="ginput on" value="06/11/2026" readonly></div>
+              <div class="grow"><label>Subject</label><input class="ginput on" value="Out of Office – Back June 12" readonly></div>
+              <div style="margin-bottom:8px;">
+                <label style="font-size:12px;color:#5f6368;display:block;margin-bottom:4px;">Message</label>
+                <textarea class="gtextarea" readonly>Hi! I'm out of the office and returning on June 12th. For urgent matters, please contact Eveling at eveling@cactushomeoffer.com. Thank you!</textarea>
+              </div>
+              <button class="gbtn green">Save Changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========== SALES POLICY ========== -->
+  <div class="section">
+    <div class="sec-head red">🚨 &nbsp;Lead &amp; Task Assignment Policy — No Exceptions</div>
+    <div class="sec-body">
+      <div class="rule"><span class="rule-icon">🚫</span><div><strong>Gray icon, lunch status, or OOO = skipped.</strong> If your Chat status shows anything other than Active, you will not receive leads or tasks. No exceptions.</div></div>
+      <div class="rule"><span class="rule-icon">📅</span><div><strong>Calendar OOO is mandatory for full-day absences</strong> — PTO, doctor visits, flights, any day you are not working. Set it in advance, not the morning of.</div></div>
+      <div class="rule"><span class="rule-icon">⏱️</span><div><strong>Timed status is required for short breaks.</strong> Stepping away for lunch or an errand? Set a timed status in Chat (e.g. "🍱 At Lunch" for 1 hour). Do not just go silent.</div></div>
+      <div class="rule"><span class="rule-icon">🔁</span><div><strong>Reset everything when you return.</strong> Turn off your Gmail vacation responder and confirm your Calendar OOO event has ended so leads flow back to you normally.</div></div>
+      <div class="rule"><span class="rule-icon">💬</span><div><strong>Notify Eveling before any day off</strong> and submit the Out of Office form. Do not rely solely on your status — direct communication is required.</div></div>
+    </div>
+  </div>
+
+  <!-- ========== FORM CTA ========== -->
+  <div class="form-box">
+    <div class="ficon">📋</div>
+    <div>
+      <h3>Before Any Day Off — Submit the Out of Office Form</h3>
+      <p>Every team member must submit this form BEFORE taking a day off or going on vacation. This notifies Eveling and ensures proper coverage is arranged. Do not skip this step.</p>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSfAbV8ypPqAWNp1KK9t85z0ocx7A3SKbhRN3TAqoXBYtgGoUA/viewform" target="_blank">📝 Submit Out of Office Form →</a>
+    </div>
+  </div>
+
+  <!-- ========== CHECKLIST ========== -->
+  <div class="section">
+    <div class="sec-head">☑️ &nbsp;Full Checklist — Before You Leave</div>
+    <div class="sec-body">
+      <div class="chk-item"><span style="font-size:17px;">✅</span><span>Submit the Out of Office Form and notify Eveling</span></div>
+      <div class="chk-item"><span style="font-size:17px;">✅</span><span>Add an <strong>"Out of office"</strong> event on Google Calendar for all absence days — this auto-syncs to Chat</span></div>
+      <div class="chk-item"><span style="font-size:17px;">✅</span><span>Turn on Gmail Vacation Responder with correct dates and message</span></div>
+      <div class="chk-item"><span style="font-size:17px;">✅</span><span>For short breaks (lunch / errands): set a <strong>timed status</strong> in Google Chat</span></div>
+      <div class="chk-item"><span style="font-size:17px;">✅</span><span>Sales team: confirm leads are covered with your lead manager</span></div>
+      <div class="chk-item"><span style="font-size:17px;">✅</span><span>On your first day back: remove Calendar OOO event and turn off Gmail vacation responder</span></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>Questions? Contact <strong>Eveling</strong> at eveling@cactushomeoffer.com</p>
+    <p style="margin-top:4px;">🌵 Cactus Home Offer · Internal Team Policy</p>
+  </div>
+
+</div>
+</body>
+</html>
